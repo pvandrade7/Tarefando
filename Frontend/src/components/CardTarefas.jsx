@@ -35,7 +35,7 @@ function CardTarefas({ atualizacaoTarefas = 0, editarTarefa }){
         async function renderizaTarefas(){
 
             const user_id = await buscaSessao();
-            const url = `http://localhost:3000/tarefas/${user_id}`
+            const url = `https://tarefando.up.railway.app/tarefas/${user_id}`
 
             try {
                 const resposta = await fetch(url);
@@ -67,7 +67,7 @@ function CardTarefas({ atualizacaoTarefas = 0, editarTarefa }){
         setProcessando(true);
 
         try {
-            const resposta = await fetch(`http://localhost:3000/tarefas/${tarefaExcluir.id}`, {
+            const resposta = await fetch(`https://tarefando.up.railway.app/tarefas/${tarefaExcluir.id}`, {
                 method: "DELETE"
             });
 
@@ -89,7 +89,7 @@ function CardTarefas({ atualizacaoTarefas = 0, editarTarefa }){
         setProcessando(true);
 
         try {
-            const resposta = await fetch(`http://localhost:3000/tarefas/${tarefa.id}/concluir`, {
+            const resposta = await fetch(`https://tarefando.up.railway.app/tarefas/${tarefa.id}/concluir`, {
                 method: "PATCH"
             });
 

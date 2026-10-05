@@ -26,7 +26,7 @@ function Dashboard() {
 
             const id_usuario = data.session.user.id;
 
-            const url = `http://localhost:3000/perfis/${id_usuario}`;
+            const url = `https://tarefando.up.railway.app/perfis/${id_usuario}`;
 
             const resposta = await fetch(url);
 
@@ -35,7 +35,7 @@ function Dashboard() {
             setNome(usuario.nome);
 
 
-            const url_tarefas = `http://localhost:3000/tarefas/${id_usuario}`;
+            const url_tarefas = `https://tarefando.up.railway.app/tarefas/${id_usuario}`;
 
             const respostaTarefas = await fetch(url_tarefas);
 

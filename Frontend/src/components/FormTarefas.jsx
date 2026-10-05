@@ -32,7 +32,7 @@ function FormTarefas({ setMostrarForm, onTarefaCriada, tarefaEditar }){
 
         try {
             const dados = { titulo, descricao, prioridade, status, prazo };
-            let url = "http://localhost:3000/tarefas";
+            let url = "https://tarefando.up.railway.app/tarefas";
             let metodo = "POST";
 
             if(tarefaEditar){
