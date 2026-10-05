@@ -59,21 +59,16 @@ function responderErro(res, error){
 
 
 router.get('/', async (req,res) => {
-    console.log("GET/ tarefas chegou no backend");
     const tarefas = await prisma.tarefas.findMany();
 
     res.json(tarefas);
 });
 
 router.get('/:id', async (req, res) =>{
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
-    if(!Number.isInteger(id) || id <= 0){
-        return res.status(400).json({ erro: "ID inválido" });
-    }
-
-    const tarefas = await prisma.tarefas.findUnique({
-        where: {id}
+    const tarefas = await prisma.tarefas.findMany({
+        where: {id_usuario: id}
     });
 
     res.json(tarefas);

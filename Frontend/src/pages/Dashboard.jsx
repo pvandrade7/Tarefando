@@ -1,43 +1,55 @@
+import { supabase } from "../services/supabase";
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 
-function Dashboard(){
+function Dashboard() {
     const [tarefas, setTarefas] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState('');
+    const [nome, setNome] = useState('');
 
     useEffect(() => {
-        let cancelado = false;
 
-        async function buscarTarefas(){
-            try {
-                const resposta = await fetch("http://localhost:3000/tarefas");
+        async function buscaSessao() {
 
-                if(!resposta.ok){
-                    throw new Error("Erro ao buscar tarefas");
-                }
+            const {data, error} = await supabase.auth.getSession();
 
-                const data = await resposta.json();
-
-                if(!cancelado){
-                    setTarefas(data);
-                }
-            } catch {
-                if(!cancelado){
-                    setErro("Não foi possível carregar as tarefas. Atualize a página para tentar novamente.");
-                }
-            } finally {
-                if(!cancelado){
-                    setCarregando(false);
-                }
+            if(error) {
+                alert(error.message);
+                return;
             }
+
+            if(!data.session){
+                window.location.href = "/login";
+                return;
+            }
+
+            const id_usuario = data.session.user.id;
+
+            const url = `http://localhost:3000/perfis/${id_usuario}`;
+
+            const resposta = await fetch(url);
+
+            const usuario = await resposta.json();
+
+            setNome(usuario.nome);
+
+
+            const url_tarefas = `http://localhost:3000/tarefas/${id_usuario}`;
+
+            const respostaTarefas = await fetch(url_tarefas);
+
+            const tarefas = await respostaTarefas.json();
+
+            console.log("Id do usuario: " + id_usuario)
+            console.log("Id da tarefa: " + tarefas.id);
+
+            setTarefas(tarefas);
+            setCarregando(false);
         }
 
-        buscarTarefas();
+        buscaSessao();
 
-        return () => {
-            cancelado = true;
-        };
     }, []);
 
     const pendentes = tarefas.filter((tarefa) => tarefa.status == "pendente");
@@ -45,14 +57,14 @@ function Dashboard(){
     const finalizadas = tarefas.filter((tarefa) => tarefa.status == "concluida");
 
     const hoje = new Date();
-    hoje.setHours(0,0,0,0);
+    hoje.setHours(0, 0, 0, 0);
 
     const limite = new Date(hoje);
     limite.setDate(limite.getDate() + 5);
 
     const proximosPrazos = tarefas.filter((tarefa) => {
         // Lemos a data no horário local para não mudar o dia por causa do fuso.
-        const prazo = new Date(`${tarefa.prazo.slice(0,10)}T00:00:00`);
+        const prazo = new Date(`${tarefa.prazo.slice(0, 10)}T00:00:00`);
         const emAberto = tarefa.status == "pendente" || tarefa.status == "em andamento";
 
         return emAberto && prazo >= hoje && prazo <= limite;
@@ -60,9 +72,11 @@ function Dashboard(){
 
     proximosPrazos.sort((primeira, segunda) => primeira.prazo.localeCompare(segunda.prazo));
 
-    return(
+
+
+    return (
         <div className="bg-[#f4f2f2] flex">
-            
+
             <NavBar />
 
             <main className="min-h-screen ml-[15%] flex-1">
@@ -71,7 +85,7 @@ function Dashboard(){
 
                     <div className="flex flex-col gap-1">
                         <p className="text-[13px] text-indigo-700 font-black">DASHBOARD</p>
-                        <h1 className="text-3xl font-bold">Olá!</h1>
+                        <h1 className="text-3xl font-bold">Olá! {nome}</h1>
                         <p className="text-[14px] font-semibold">Aqui está um resumo de suas tarefas.</p>
                     </div>
 
@@ -117,32 +131,30 @@ function Dashboard(){
                     )}
 
                     {!carregando && !erro && proximosPrazos.map((tarefa) => {
-                        return(
+                        return (
                             <div key={tarefa.id} className="flex flex-col gap-3 bg-white border border-gray-200 rounded-lg p-5">
                                 <div className="flex items-center gap-3">
                                     <h2 className="text-lg font-bold">{tarefa.titulo}</h2>
-                                    <p className={`px-3 py-1 rounded-md text-sm font-semibold ${
-                                        tarefa.prioridade == "alta"
+                                    <p className={`px-3 py-1 rounded-md text-sm font-semibold ${tarefa.prioridade == "alta"
                                             ? "bg-red-400 text-red-900"
                                             : tarefa.prioridade == "media"
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : "bg-green-100 text-green-800"
-                                    }`}>
+                                                ? "bg-yellow-100 text-yellow-800"
+                                                : "bg-green-100 text-green-800"
+                                        }`}>
                                         {tarefa.prioridade}
                                     </p>
                                 </div>
 
                                 <p className="text-sm text-gray-600">{tarefa.descricao}</p>
 
-                                <p className={`self-start px-3 py-1 rounded-md text-sm font-semibold ${
-                                    tarefa.status == "em andamento"
+                                <p className={`self-start px-3 py-1 rounded-md text-sm font-semibold ${tarefa.status == "em andamento"
                                         ? "bg-yellow-100 text-yellow-800"
                                         : "bg-red-400 text-red-900"
-                                }`}>
+                                    }`}>
                                     {tarefa.status}
                                 </p>
 
-                                <p>Prazo: {tarefa.prazo.slice(0,10).split('-').reverse().join('/')}</p>
+                                <p>Prazo: {tarefa.prazo.slice(0, 10).split('-').reverse().join('/')}</p>
                             </div>
                         );
                     })}
@@ -150,7 +162,7 @@ function Dashboard(){
 
             </main>
         </div>
-        
+
     );
 }
 export default Dashboard;

@@ -48,7 +48,7 @@ function MinhasTarefas(){
 
 
                 <div className="ml-10 py-3 border-t border-b border-[#00000047]">
-                    <h1 className="text-[18px] font-extrabold">Próximos prazos</h1>
+                    <h1 className="text-[18px] font-extrabold">Gerencies suas tarefas</h1>
                     <p className="text-[13px] font-medium">Tarefas com data de entrega mais próximas</p>
                 </div>
 

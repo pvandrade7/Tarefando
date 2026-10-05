@@ -50,7 +50,7 @@ function Login() {
                             type="email" 
                             placeholder="exemplo@gmail.com" 
                             id="email" 
-                            className="border border-gray-400 rounded px-2 py-2 outline-none mb-4"
+                            className="border border-gray-400 rounded px-2 py-2 mb-4 outline-blue-700"
                             value={email}
                             onChange={(event)=>{setEmail(event.target.value)}}
                          />
@@ -60,7 +60,7 @@ function Login() {
                             type="password" 
                             placeholder="Digite sua senha" 
                             id="senha" 
-                            className="border border-gray-400 rounded px-2 py-2 outline-none mb-5"
+                            className="border border-gray-400 rounded px-2 py-2 mb-5 outline-blue-700"
                             value={senha}
                             onChange={(event)=>{setSenha(event.target.value)}}
                         />

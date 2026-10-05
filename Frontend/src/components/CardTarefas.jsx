@@ -1,3 +1,5 @@
+import { data } from "react-router-dom";
+import { supabase } from "../services/supabase";
 import { useEffect, useState } from "react";
 
 function CardTarefas({ atualizacaoTarefas = 0, editarTarefa }){
@@ -10,9 +12,33 @@ function CardTarefas({ atualizacaoTarefas = 0, editarTarefa }){
     useEffect(()=> {
         let cancelado = false;
 
+         async function buscaSessao() {
+
+            const {data, error} = await supabase.auth.getSession();
+
+            if(error) {
+                alert(error.message);
+                return;
+            }
+
+            if(!data.session){
+                window.location.href = "/login";
+                return;
+            }
+
+            const id_usuario = data.session.user.id;
+            
+            return id_usuario;
+         }
+
+
         async function renderizaTarefas(){
+
+            const user_id = await buscaSessao();
+            const url = `http://localhost:3000/tarefas/${user_id}`
+
             try {
-                const resposta = await fetch("http://localhost:3000/tarefas");
+                const resposta = await fetch(url);
 
                 if(!resposta.ok){
                     throw new Error("Erro ao buscar tarefas");

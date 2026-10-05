@@ -10,42 +10,49 @@ function Cadastro(){
 
     async function cadastro(event) {
         event.preventDefault();
-
+        
         if(senha!=confirmarSenha){
             alert("as senhas não coincidem");
             return;
         }
-
+        
         const {data, error} = await supabase.auth.signUp({
             email: email,
             password: senha
         });
-
+        
         if(error){
             alert(error.message);
             return;
         }
-        console.log(data);
+        
+        const url = "http://localhost:3000/perfis";
+        
+        const envio = await fetch(url, {
+            method: "POST",
+            
+            headers: { 
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                id: data.user.id,
+                nome: nome,
+                email: email
+            })
 
-        // const {error: errorPerfil} = await supabase
-        //     .from('perfil')
-        //     .insert({
-        //         id: data.user.id,
-        //         nome: nome,
-        //         email: email
-        //     });
-
-        // if(errorPerfil){
-        //     alert(errorPerfil.message);
-        //     return;
-        // }
-        // alert("perfil criado com sucesso!");
+        });
+        
+        if (!envio.ok) {
+            alert(error.message);
+            return;
+        }
 
         window.location.href="/login";
     }
 
     return(
         <div className="bg-[#F5F5F5] min-h-screen flex flex-col items-center justify-center">
+            
             <form onSubmit={cadastro} className="bg-[#ffffff] flex flex-col border border-[#06060627] rounded-xl p-[25px] w-[500px] h-[650px]">
 
                 <div className="flex flex-col mb-[25px]">
@@ -76,15 +83,18 @@ function Cadastro(){
                         onChange={(event) => {setEmail(event.target.value)}}
                     />
 
-                    <label className="text-[14px] font-semibold mb-1" htmlFor="senha">Senha</label>
-                    <input 
-                        type="password" 
-                        placeholder="Crie uma senha" 
-                        id="senha"
-                        className="border border-[#00000050] px-2 rounded-[7px] py-2 mb-5"
-                        value={senha}
-                        onChange={(event => {setSenha(event.target.value)})}
-                    />
+                    <div className="flex flex-col mb-5">
+                        <label className="text-[14px] font-semibold mb-1" htmlFor="senha">Senha</label>
+                        <input 
+                            type="password" 
+                            placeholder="Crie uma senha" 
+                            id="senha"
+                            className="border border-[#00000050] px-2 rounded-[7px] py-2 mb-5"
+                            value={senha}
+                            onChange={(event => {setSenha(event.target.value)})}
+                        />
+                        <p className="text-[12px] mt-[-15px] ml-1 text-gray-600">Mínimo 6 caracteres</p>
+                    </div>
 
                     <label className="text-[14px] font-semibold mb-1" htmlFor="confSenha">Confirmar senha</label>
                     <input 
