@@ -26,7 +26,7 @@ function MinhasTarefas(){
                     <div className="flex flex-col gap-1">
                         <p className="text-[13px] text-indigo-700 font-black">TAREFAS</p>
                         <h1 className="text-3xl font-bold">Minhas Tarefas </h1>
-                        <p className="text-[14px] font-semibold">Visualize e organize todas as suas atividades.</p>
+                        <p className="text-[14px] font-semibold">Acompanhe suas tarefas cadastradas.</p>
                     </div>
 
                     <button onClick={() => {
