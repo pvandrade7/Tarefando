@@ -11,6 +11,21 @@ function Cadastro(){
     async function cadastro(event) {
         event.preventDefault();
         
+        if(!nome || !email || !senha || !confirmarSenha){
+            alert("Preencha todos os campos");
+            return;
+        }
+
+        if(senha.includes(" ")){
+            alert("Senha não deve conter espaço em branco");
+            return;
+        }
+
+        if(senha.length < 6){
+            alert("A senha deve ter no mínimo 6 caracteres");
+            return;
+        }
+
         if(senha!=confirmarSenha){
             alert("as senhas não coincidem");
             return;
@@ -47,6 +62,7 @@ function Cadastro(){
             return;
         }
 
+        alert("Usuário cadastrado");
         window.location.href="/login";
     }
 

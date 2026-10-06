@@ -42,7 +42,7 @@ function FormTarefas({ setMostrarForm, onTarefaCriada, tarefaEditar }){
                 const { data, error } = await supabase.auth.getSession();
 
                 if(error || !data.session){
-                    alert("Entre na sua conta para criar uma tarefa");
+                    window.location.href = "/login";
                     return;
                 }
 
