@@ -41,7 +41,7 @@ function Cadastro(){
             return;
         }
         
-        const url = "http://localhost:3000/perfis";
+        const url = "https://tarefando.up.railway.app/perfis";
         
         const envio = await fetch(url, {
             method: "POST",
